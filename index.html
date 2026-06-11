@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Pampanga Emergency Hotlines</title>
+<meta name="description" content="Pampanga Emergency Hotlines Directory — Police, Fire, DRRMO, Hospitals, Utilities, Government">
+<meta name="theme-color" content="#1a1a2e">
+<style>
+:root {
+  --bg: #0f0f1a;
+  --surface: #1a1a2e;
+  --surface2: #222240;
+  --amber: #f0a500;
+  --amber-glow: #f0a50044;
+  --amber-dim: #c48700;
+  --red: #e63946;
+  --red-glow: #e6394644;
+  --green: #2ecc71;
+  --green-glow: #2ecc7144;
+  --blue: #4a90d9;
+  --blue-glow: #4a90d944;
+  --text: #f0f0f0;
+  --text-dim: #aaa;
+  --text-muted: #777;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --font-xl: clamp(1.6rem, 4vw, 2.4rem);
+  --font-lg: clamp(1.2rem, 3vw, 1.6rem);
+  --font-md: clamp(0.95rem, 2.5vw, 1.15rem);
+  --font-sm: clamp(0.8rem, 2vw, 0.95rem);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-bottom: 2px solid var(--amber-dim);
+  padding: 1.2rem 1rem 0.8rem;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header h1 {
+  font-size: var(--font-xl);
+  color: var(--amber);
+  margin-bottom: 0.15rem;
+  letter-spacing: -0.02em;
+}
+.header .subtitle {
+  font-size: var(--font-sm);
+  color: var(--text-dim);
+  margin-bottom: 0.25rem;
+}
+.header .badge-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 99px;
+  background: var(--amber-glow);
+  color: var(--amber);
+  font-weight: 600;
+}
+.badge.updated {
+  background: var(--green-glow);
+  color: var(--green);
+  cursor: default;
+}
+
+/* ── SEARCH ── */
+.search-wrap {
+  margin: 1rem 1rem 0.5rem;
+  position: relative;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.search-wrap input {
+  width: 100%;
+  padding: 0.9rem 1rem 0.9rem 2.8rem;
+  font-size: var(--font-md);
+  background: var(--surface2);
+  border: 2px solid transparent;
+  border-radius: 99px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-wrap input:focus {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 4px var(--amber-glow);
+}
+.search-wrap input::placeholder { color: var(--text-muted); }
+.search-wrap .search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  pointer-events: none;
+}
+.search-wrap .clear-btn {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: 50%;
+  display: none;
+  line-height: 1;
+}
+.clear-btn.visible { display: block; }
+
+/* ── TABS ── */
+.tabs-outer {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  background: var(--bg);
+  padding: 0.4rem 0 0.6rem;
+  border-bottom: 1px solid #ffffff10;
+  margin-bottom: 0.5rem;
+}
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding: 0.2rem 0.8rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0;
+  padding: 0.65rem 1rem;
+  font-size: var(--font-sm);
+  font-weight: 700;
+  border: 2px solid transparent;
+  border-radius: 99px;
+  background: var(--surface);
+  color: var(--text-dim);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  user-select: none;
+}
+.tab.active {
+  background: var(--amber-glow);
+  border-color: var(--amber);
+  color: var(--amber);
+}
+.tab:active { transform: scale(0.95); }
+
+/* ── RESULTS COUNT ── */
+.results-info {
+  text-align: center;
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  padding: 0 1rem;
+}
+
+/* ── CARDS ── */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0 0.8rem 2rem;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid #ffffff0a;
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card:hover { border-color: #ffffff18; }
+.card.hidden { display: none; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+}
+.card-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 0.1rem;
+}
+.card-title {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+.card-subtitle {
+  font-size: var(--font-sm);
+  color: var(--text-dim);
+  margin-top: 0.15rem;
+}
+.card-area {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+  font-style: italic;
+}
+.er-badge {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+  background: var(--red-glow);
+  color: var(--red);
+  font-weight: 700;
+}
+.er-badge.er-direct {
+  background: var(--blue-glow);
+  color: var(--blue);
+}
+
+.card-numbers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.num-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface2);
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--amber);
+  font-size: var(--font-lg);
+  font-weight: 700;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.num-btn:active {
+  background: var(--amber-glow);
+  border-color: var(--amber);
+  transform: scale(0.97);
+}
+.num-btn .phone-icon { font-size: 1.3rem; flex-shrink: 0; }
+.num-btn .num-text { flex: 1; word-break: break-all; }
+.num-btn .copy-hint {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.num-btn:hover .copy-hint,
+.num-btn:active .copy-hint { opacity: 1; }
+
+/* ER direct line */
+.num-btn.er-line {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--blue-glow);
+}
+.num-btn.er-line:active {
+  background: var(--blue-glow);
+  border-color: var(--blue);
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+.empty-state .empty-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+.empty-state p { font-size: var(--font-md); }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+  border-top: 1px solid #ffffff10;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.footer .update-btn {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1.2rem;
+  background: var(--green-glow);
+  color: var(--green);
+  border: 1px solid var(--green);
+  border-radius: 99px;
+  font-size: var(--font-sm);
+  font-weight: 700;
+  cursor: default;
+  text-decoration: none;
+}
+.footer .attribution {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--amber);
+  color: var(--bg);
+  padding: 0.7rem 1.5rem;
+  border-radius: 99px;
+  font-weight: 700;
+  font-size: var(--font-sm);
+  z-index: 999;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (min-width: 500px) {
+  .tabs { justify-content: center; }
+  .tab { padding: 0.7rem 1.2rem; font-size: var(--font-md); }
+}
+@media (min-width: 700px) {
+  .cards { padding: 0 1rem 3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header" id="top">
+  <h1>📞 Pampanga Hotlines</h1>
+  <div class="subtitle">Central Luzon (Region III) · Emergency Directory</div>
+  <div class="badge-row">
+    <span class="badge">🚨 Dial 911 for ALL emergencies</span>
+    <span class="badge updated" id="updateBadge">📅 Updated: </span>
+  </div>
+</header>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input type="search" id="searchInput" placeholder="Search all numbers &amp; cities..." autocomplete="off" enterkeyhint="search">
+  <button class="clear-btn" id="clearBtn" aria-label="Clear search">✕</button>
+</div>
+
+<!-- TABS -->
+<nav class="tabs-outer">
+  <div class="tabs" id="tabBar"></div>
+</nav>
+
+<!-- RESULTS COUNT -->
+<div class="results-info" id="resultsInfo"></div>
+
+<!-- CARDS CONTAINER -->
+<main class="cards" id="cardsContainer"></main>
+
+<!-- EMPTY STATE (hidden by default) -->
+<div class="empty-state hidden" id="emptyState">
+  <div class="empty-icon">📭</div>
+  <p>No results found</p>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="update-btn" id="footerUpdate">📅 Data updated: </div>
+  <div class="attribution">Source: Pampanga LGU · PDRRMO · PNP · BFP · Compiled for public service</div>
+  <div class="attribution" style="margin-top:0.2rem">Built with ❤️ · No trackers · No network requests · Works offline</div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════ EMBEDDED DATA ═══════════ -->
+<script>
+const DATA = {"meta":{"title":"Pampanga Emergency Hotlines","province":"Pampanga","region":"Central Luzon (Region III)","updated":"2026-06-11","note":"Dial 911 for all emergencies. Save these numbers."},"national":[{"name":"National Emergency","number":"911","icon":"🚨"},{"name":"PNP Emergency","number":"117","icon":"👮"},{"name":"BFP Emergency","number":"160","icon":"🔥"},{"name":"Red Cross","number":"143","icon":"➕"}],"provincial":[{"name":"PDRRMO Pampanga","numbers":["0961-645-8886","(045) 455-0278","0917-512-1827"],"icon":"🏛️"},{"name":"DOH HEMB OpCen","numbers":["0917-805-9756","0917-861-9528"],"icon":"🏥"}],"police":[{"city":"Angeles City","numbers":["(045) 322-7796","0917-851-9581"]},{"city":"Mabalacat City","numbers":["0905-413-8120","0948-552-4384"]},{"city":"San Fernando City","numbers":["0923-223-4956","0917-889-4425"]},{"city":"Apalit","numbers":["0998-598-5449","0998-967-3255"]},{"city":"Arayat","numbers":["0906-291-6662","0998-598-5450"]},{"city":"Bacolor","numbers":["0916-591-7559","0998-598-5451"]},{"city":"Candaba","numbers":["0915-512-3461","0998-598-5452"]},{"city":"Floridablanca","numbers":["0998-598-5453","0998-967-3259"]},{"city":"Guagua","numbers":["(045) 409-4420","0927-171-1286"]},{"city":"Lubao","numbers":["0915-131-2807","0920-550-0570"]},{"city":"Macabebe","numbers":["(045) 435-0542","0915-801-1925"]},{"city":"Magalang","numbers":["0915-599-9759","0998-598-5460"]},{"city":"Masantol","numbers":["0936-408-3598","0998-598-5461"]},{"city":"Mexico","numbers":["0915-810-8960","0998-598-5462"]},{"city":"Minalin","numbers":["0956-736-4425","0998-598-5463"]},{"city":"Porac","numbers":["0977-301-4154","0998-598-5464"]},{"city":"San Luis","numbers":["0998-598-5467","0998-967-3270"]},{"city":"San Simon","numbers":["(045) 402-4613","0998-598-5468"]},{"city":"Santa Ana","numbers":["0927-147-2505","0998-598-5470"]},{"city":"Santa Rita","numbers":["0917-931-1884","0998-598-5471"]},{"city":"Santo Tomas","numbers":["0998-598-5472","0995-924-8913"]},{"city":"Sasmuan","numbers":["0998-598-5469","0998-967-3272"]}],"fire":[{"city":"Angeles City","numbers":["(045) 888-5899","0995-822-3620"]},{"city":"Mabalacat City","numbers":["0933-990-9960"]},{"city":"San Fernando City","numbers":["(045) 961-2313","0923-235-9725"]},{"city":"Apalit","numbers":["(045) 652-0206","0931-047-5410"]},{"city":"Arayat","numbers":["911 (no direct line)"]},{"city":"Bacolor","numbers":["(045) 436-1828","0923-103-8363"]},{"city":"Candaba","numbers":["0933-183-3427","0976-363-6388"]},{"city":"Floridablanca","numbers":["0946-923-4836"]},{"city":"Guagua","numbers":["(045) 458-1899","0942-350-8696"]},{"city":"Lubao","numbers":["(045) 971-6950","0943-527-7958"]},{"city":"Macabebe","numbers":["(045) 435-1968"]},{"city":"Magalang","numbers":["0923-083-3690"]},{"city":"Masantol","numbers":["0923-422-2922"]},{"city":"Mexico","numbers":["(045) 966-3292","0942-060-4042"]},{"city":"Minalin","numbers":["0923-532-3026"]},{"city":"Porac","numbers":["0909-918-7205","0967-283-6777"]},{"city":"San Luis","numbers":["0923-344-7363"]},{"city":"San Simon","numbers":["(045) 880-0700","0923-415-4526"]},{"city":"Santa Ana","numbers":["0923-831-0367"]},{"city":"Santa Rita","numbers":["(045) 497-0250","0933-528-2480"]},{"city":"Santo Tomas","numbers":["0933-857-2076","(045) 407-6664"]},{"city":"Sasmuan","numbers":["0942-731-2489"]}],"drrmo":[{"city":"PDRRMO (Province)","numbers":["0961-645-8886","(045) 455-0278"]},{"city":"Angeles City","numbers":["0917-851-9581","0998-842-7746"]},{"city":"Mabalacat City","numbers":["0939-924-3166","0998-999-4357"]},{"city":"San Fernando City","numbers":["0939-922-2423","(045) 961-4357"]},{"city":"Apalit","numbers":["0998-180-9077"]},{"city":"Arayat","numbers":["0922-906-2071"]},{"city":"Bacolor","numbers":["0966-136-5586","0929-446-1940"]},{"city":"Candaba","numbers":["0915-110-6306","0961-605-6768"]},{"city":"Floridablanca","numbers":["0962-126-6282","0946-553-0910"]},{"city":"Guagua","numbers":["0999-805-0357"]},{"city":"Lubao","numbers":["0917-812-5607"]},{"city":"Macabebe","numbers":["0917-608-6038"]},{"city":"Magalang","numbers":["0917-146-9432"]},{"city":"Masantol","numbers":["0906-189-3021"]},{"city":"Mexico","numbers":["0970-828-4135","0905-918-7574"]},{"city":"Minalin","numbers":["0926-500-2119"]},{"city":"Porac","numbers":["0953-694-2079"]},{"city":"San Luis","numbers":["0948-995-3163"]},{"city":"San Simon","numbers":["0949-245-5764"]},{"city":"Santa Ana","numbers":["0997-788-4690"]},{"city":"Santa Rita","numbers":["0923-842-2399"]},{"city":"Santo Tomas","numbers":["0917-505-9197"]},{"city":"Sasmuan","numbers":["0961-645-6149"]}],"hospitals":[{"name":"JBLMGH","city":"San Fernando","numbers":["(045) 961-3363","(045) 961-3544"],"er":true},{"name":"AUF Medical Center","city":"Angeles","numbers":["(045) 625-2999","0919-059-7235"],"er":true},{"name":"Angeles Medical Center","city":"Angeles","numbers":["(045) 888-7150"],"er":"(045) 625-9389"},{"name":"RLMMC (Ospital Ning Angeles)","city":"Angeles","numbers":["(045) 322-4495"],"er":true},{"name":"Mother Teresa of Calcutta","city":"San Fernando","numbers":["(045) 861-4607","0917-538-3151"],"er":true},{"name":"OLMCMC","city":"San Fernando","numbers":["(045) 860-0993"],"er":"0920-965-3959"},{"name":"Sacred Heart of Jesus","city":"Angeles","numbers":["(045) 624-5606"],"er":true},{"name":"PRI Medical Center","city":"Angeles","numbers":["(045) 888-4747"],"er":true},{"name":"St. Raphael (Dau)","city":"Mabalacat","numbers":["(045) 892-2688"],"er":true},{"name":"Pampanga Medical Specialist","city":"Guagua","numbers":["(045) 455-1242"],"er":"(045) 455-7674"},{"name":"San Fernandino","city":"San Fernando","numbers":["(045) 860-1989"],"er":true},{"name":"V.L. Makabali","city":"San Fernando","numbers":["(045) 961-2234"],"er":true},{"name":"Dee Hwa Liong","city":"Angeles","numbers":["(045) 322-8888"],"er":true},{"name":"The Medical City-Angeles","city":"Angeles","numbers":["(045) 887-2882"],"er":true},{"name":"Apalit Doctor's","city":"Apalit","numbers":["(045) 652-0030"],"er":true},{"name":"Rosario Memorial","city":"Guagua","numbers":["(045) 900-0954"],"er":true}],"electric":[{"name":"PELCO 1","area":"Arayat, Candaba, Magalang, Mexico, San Luis, Sta. Ana","numbers":["0917-554-0565","0917-324-7983","0939-904-5226"]},{"name":"PELCO II","area":"Guagua, Lubao, Sasmuan, Sta. Rita, Porac, Floridablanca","numbers":["(045) 900-0423 (24/7)"]},{"name":"AEC","area":"Angeles City, parts of Mabalacat, Bacolor, Porac","numbers":["(045) 888-2888","0920-977-3644"]},{"name":"SFELAPCO","area":"San Fernando City","numbers":["(045) 961-3151"]}],"water":[{"name":"Angeles City Water District","numbers":["(045) 888-2242","(045) 322-5048"]},{"name":"San Fernando Water District","numbers":["(045) 961-3817","0939-915-2523"]},{"name":"Guagua Water District","numbers":["(045) 900-0114"]}],"halls":[{"city":"Angeles City","number":"(045) 322-7251"},{"city":"Mabalacat City","number":"(045) 331-2443"},{"city":"San Fernando City","number":"(045) 961-5705"},{"city":"Apalit","number":"(045) 652-0358"},{"city":"Arayat","number":"(045) 438-0271"},{"city":"Bacolor","number":"(045) 436-0084"},{"city":"Candaba","number":"(045) 409-0831"},{"city":"Floridablanca","number":"(045) 971-2021"},{"city":"Guagua","number":"(045) 900-0130"},{"city":"Lubao","number":"(045) 971-2050"},{"city":"Macabebe","number":"(045) 435-0541"},{"city":"Magalang","number":"(045) 438-0112"},{"city":"Masantol","number":"(045) 435-1316"},{"city":"Mexico","number":"(045) 966-2161"},{"city":"Minalin","number":"(045) 435-2207"},{"city":"Porac","number":"(045) 649-1005"},{"city":"San Luis","number":"(045) 435-0457"},{"city":"San Simon","number":"(045) 402-4611"},{"city":"Santa Ana","number":"(045) 409-1298"},{"city":"Santa Rita","number":"(045) 497-0565"},{"city":"Santo Tomas","number":"(045) 407-6663"},{"city":"Sasmuan","number":"(045) 435-3888"}],"telecom":[{"name":"PLDT","number":"171"},{"name":"Globe","number":"211 / (02) 7730-1000"},{"name":"Converge","number":"(045) 598-3000"}],"agencies":[{"name":"LTO Pampanga","number":"(045) 961-5631"},{"name":"PhilHealth","number":"(02) 8441-7442"},{"name":"SSS San Fernando","number":"(045) 961-3360"},{"name":"SSS Angeles","number":"(045) 322-3145"},{"name":"BIR RDO 21A","number":"(045) 961-2635"},{"name":"DFA Pampanga","number":"(045) 636-0007"}]};
+
+// ── Category definitions ──
+const CATS = [
+  { id: 'emergency', label: '🚨 Emergency',   icon: '🚨', sources: ['national'] },
+  { id: 'police',    label: '👮 Police',      icon: '👮', sources: ['police'] },
+  { id: 'fire',      label: '🔥 Fire',        icon: '🔥', sources: ['fire'] },
+  { id: 'drrmo',     label: '🚑 DRRMO',       icon: '🚑', sources: ['drrmo'] },
+  { id: 'hospitals', label: '🏥 Hospitals',    icon: '🏥', sources: ['hospitals'] },
+  { id: 'utilities', label: '⚡ Utilities',    icon: '⚡', sources: ['electric','water','telecom'] },
+  { id: 'govt',      label: '🏛️ Govt',        icon: '🏛️', sources: ['halls','agencies','provincial'] },
+];
+
+let activeCat = 'emergency';
+let searchQuery = '';
+
+// ── Normalize a phone number string to digits-only for tel: links ──
+function telHref(num) {
+  let n = num.replace(/[^\d+]/g, '');
+  // If it starts with 0, convert to +63
+  if (n.startsWith('0')) n = '+63' + n.slice(1);
+  // If it's just digits (e.g. 911, 117, 143, 171), prefix tel:
+  if (/^\d+$/.test(n) && !n.startsWith('+')) n = n;
+  return 'tel:' + n;
+}
+
+// ── Clean number for display ──
+function cleanNum(num) { return num.trim(); }
+
+// ── Build card HTML for a single entry ──
+function buildCard(entry, source) {
+  let icon = entry.icon || '';
+  let title = '', subtitle = '', area = '', erHtml = '';
+  let numbers = [];
+
+  // Determine structure based on source and entry shape
+  if (source === 'national') {
+    icon = entry.icon || '';
+    title = entry.name;
+    numbers = [entry.number];
+  } else if (source === 'provincial') {
+    icon = entry.icon || '🏛️';
+    title = entry.name;
+    numbers = entry.numbers || [];
+  } else if (source === 'police' || source === 'fire' || source === 'drrmo') {
+    icon = source === 'police' ? '👮' : source === 'fire' ? '🔥' : '🚑';
+    title = entry.city;
+    numbers = entry.numbers || [];
+  } else if (source === 'hospitals') {
+    icon = '🏥';
+    title = entry.name;
+    subtitle = entry.city;
+    numbers = entry.numbers || [];
+    // ER badge
+    if (entry.er === true) {
+      erHtml = '<span class="er-badge">🚑 24/7 ER</span>';
+    } else if (typeof entry.er === 'string') {
+      erHtml = '<span class="er-badge er-direct">🚑 ER: ' + entry.er + '</span>';
+    }
+  } else if (source === 'electric') {
+    icon = '⚡';
+    title = entry.name;
+    area = entry.area || '';
+    numbers = entry.numbers || [];
+  } else if (source === 'water') {
+    icon = '💧';
+    title = entry.name;
+    numbers = entry.numbers || [];
+  } else if (source === 'telecom') {
+    icon = '📡';
+    title = entry.name;
+    numbers = [entry.number];
+  } else if (source === 'halls') {
+    icon = '🏛️';
+    title = entry.city + ' Municipal Hall';
+    numbers = [entry.number];
+  } else if (source === 'agencies') {
+    icon = '🏛️';
+    title = entry.name;
+    numbers = [entry.number];
+  }
+
+  // Build number buttons
+  let numButtons = '';
+  numbers.forEach(num => {
+    let clean = cleanNum(num);
+    let classes = 'num-btn';
+    numButtons += '<a href="' + telHref(clean) + '" class="' + classes + '" onclick="handleCallClick(event,\'' + clean.replace(/'/g,"\\'") + '\')">' +
+      '<span class="phone-icon">📞</span>' +
+      '<span class="num-text">' + clean + '</span>' +
+      '<span class="copy-hint">tap to call</span>' +
+    '</a>';
+  });
+
+  // If hospital has an ER direct line (string), add it as a special button
+  if (source === 'hospitals' && typeof entry.er === 'string') {
+    numButtons += '<a href="' + telHref(entry.er) + '" class="num-btn er-line" onclick="handleCallClick(event,\'' + entry.er.replace(/'/g,"\\'") + '\')">' +
+      '<span class="phone-icon">🚑</span>' +
+      '<span class="num-text">' + cleanNum(entry.er) + ' (ER Direct)</span>' +
+      '<span class="copy-hint">tap to call</span>' +
+    '</a>';
+  }
+
+  let areaHtml = area ? '<div class="card-area">📍 ' + area + '</div>' : '';
+
+  return '<div class="card" data-cat="' + getCatForSource(source) + '" data-search="' + escapeHtml((title + ' ' + subtitle + ' ' + area + ' ' + numbers.join(' ')).toLowerCase()) + '">' +
+    '<div class="card-header">' +
+      (icon ? '<span class="card-icon">' + icon + '</span>' : '') +
+      '<div>' +
+        '<div class="card-title">' + escapeHtml(title) + '</div>' +
+        (subtitle ? '<div class="card-subtitle">' + escapeHtml(subtitle) + '</div>' : '') +
+        areaHtml +
+        erHtml +
+      '</div>' +
+    '</div>' +
+    '<div class="card-numbers">' + numButtons + '</div>' +
+  '</div>';
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function getCatForSource(source) {
+  for (let c of CATS) {
+    if (c.sources.includes(source)) return c.id;
+  }
+  return 'emergency';
+}
+
+// ── Render all cards ──
+function renderAllCards() {
+  let html = '';
+  let allEntries = [];
+
+  CATS.forEach(cat => {
+    cat.sources.forEach(src => {
+      let entries = DATA[src];
+      if (!entries) return;
+      entries.forEach(entry => {
+        allEntries.push({ entry, source: src, catId: cat.id });
+      });
+    });
+  });
+
+  // Build HTML in category order
+  let catHtml = {};
+  CATS.forEach(cat => { catHtml[cat.id] = ''; });
+
+  allEntries.forEach(item => {
+    let card = buildCard(item.entry, item.source);
+    catHtml[item.catId] += card;
+  });
+
+  return { catHtml, allEntries };
+}
+
+const { catHtml: allCatHtml, allEntries: allCardEntries } = renderAllCards();
+
+// ── DOM refs ──
+const cardsContainer = document.getElementById('cardsContainer');
+const searchInput = document.getElementById('searchInput');
+const clearBtn = document.getElementById('clearBtn');
+const tabBar = document.getElementById('tabBar');
+const resultsInfo = document.getElementById('resultsInfo');
+const emptyState = document.getElementById('emptyState');
+const toast = document.getElementById('toast');
+
+// ── Build tabs ──
+CATS.forEach(cat => {
+  let btn = document.createElement('button');
+  btn.className = 'tab';
+  btn.textContent = cat.label;
+  btn.dataset.cat = cat.id;
+  btn.addEventListener('click', () => setActiveCat(cat.id));
+  tabBar.appendChild(btn);
+});
+
+// ── Render initial cards ──
+function renderCards() {
+  let html = '';
+  if (searchQuery) {
+    // Search mode: filter across ALL categories
+    let q = searchQuery.toLowerCase();
+    let shown = 0;
+    CATS.forEach(cat => {
+      cat.sources.forEach(src => {
+        let entries = DATA[src];
+        if (!entries) return;
+        entries.forEach(entry => {
+          // Build searchable text
+          let searchText = '';
+          if (entry.name) searchText += entry.name + ' ';
+          if (entry.city) searchText += entry.city + ' ';
+          if (entry.area) searchText += entry.area + ' ';
+          let nums = entry.number ? [entry.number] : (entry.numbers || []);
+          searchText += nums.join(' ');
+          searchText = searchText.toLowerCase();
+
+          if (searchText.includes(q)) {
+            html += buildCard(entry, src);
+            shown++;
+          }
+        });
+      });
+    });
+    if (shown === 0) {
+      emptyState.classList.remove('hidden');
+      cardsContainer.innerHTML = '';
+      resultsInfo.textContent = 'No results for "' + escapeHtml(searchQuery) + '"';
+      return;
+    }
+    emptyState.classList.add('hidden');
+    resultsInfo.textContent = shown + ' result' + (shown !== 1 ? 's' : '') + ' found';
+  } else {
+    // Category mode
+    html = allCatHtml[activeCat] || '';
+    emptyState.classList.add('hidden');
+    // Count entries
+    let count = 0;
+    let activeCatObj = CATS.find(c => c.id === activeCat);
+    if (activeCatObj) {
+      activeCatObj.sources.forEach(src => {
+        if (DATA[src]) count += DATA[src].length;
+      });
+    }
+    resultsInfo.textContent = count + ' listing' + (count !== 1 ? 's' : '');
+  }
+  cardsContainer.innerHTML = html;
+}
+
+function setActiveCat(catId) {
+  activeCat = catId;
+  searchQuery = '';
+  searchInput.value = '';
+  clearBtn.classList.remove('visible');
+  updateTabUI();
+  renderCards();
+}
+
+function updateTabUI() {
+  tabBar.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.cat === activeCat && !searchQuery);
+  });
+}
+
+// ── Search handler ──
+searchInput.addEventListener('input', function() {
+  searchQuery = this.value.trim();
+  if (searchQuery) {
+    clearBtn.classList.add('visible');
+  } else {
+    clearBtn.classList.remove('visible');
+  }
+  updateTabUI();
+  renderCards();
+});
+
+clearBtn.addEventListener('click', function() {
+  searchInput.value = '';
+  searchQuery = '';
+  clearBtn.classList.remove('visible');
+  updateTabUI();
+  renderCards();
+  searchInput.focus();
+});
+
+// ── Toast ──
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+// ── Handle call click (copy fallback for desktop) ──
+function handleCallClick(e, num) {
+  // On mobile, tel: links work natively. On desktop, they may not.
+  // We show a toast and try to copy the number as a fallback.
+  if (!/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+    // Desktop: copy number
+    e.preventDefault();
+    navigator.clipboard.writeText(num).then(() => {
+      showToast('📋 Copied: ' + num);
+    }).catch(() => {
+      showToast('📞 ' + num);
+    });
+  } else {
+    // Mobile: let tel: link do its thing, but show toast
+    showToast('📞 Calling ' + num + '…');
+  }
+}
+
+// ── Set update date ──
+var updateDate = DATA.meta.updated;
+document.getElementById('updateBadge').textContent = '📅 Updated: ' + updateDate;
+document.getElementById('footerUpdate').textContent = '📅 Data updated: ' + updateDate;
+
+// ── Init ──
+updateTabUI();
+renderCards();
+
+// ── Keyboard shortcut: / to focus search ──
+document.addEventListener('keydown', function(e) {
+  if (e.key === '/' && document.activeElement !== searchInput && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  // Escape to clear search
+  if (e.key === 'Escape' && document.activeElement === searchInput && searchQuery) {
+    searchInput.value = '';
+    searchQuery = '';
+    clearBtn.classList.remove('visible');
+    updateTabUI();
+    renderCards();
+    searchInput.blur();
+  }
+});
+
+// ── Service Worker for offline (optional, but we're already zero-dependency) ──
+console.log('✅ Pampanga Emergency Hotlines loaded · ' + updateDate + ' · Zero dependencies · All data embedded');
+</script>
+</body>
+</html>
