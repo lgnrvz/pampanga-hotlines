@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Weekly hotline verifier — checks key sources, updates if changes found, pushes to GitHub Pages."""
-import json, os, subprocess, sys, datetime
+import json, os, subprocess, sys, datetime, re
 
 REPO = "/home/raspberrypi/pampanga-hotlines"
 PAGES_REPO = "/tmp/lgnrvz.github.io-hotlines"
@@ -47,17 +47,25 @@ data["meta"]["updated"] = now
 with open(HOTLINES_JSON, "w") as f:
     json.dump(data, f, indent=2, ensure_ascii=False)
 
+# The date shown on the page lives inside the embedded DATA JSON in index.html,
+# rendered by JS into the badge. Update it too, else the copy to the pages repo
+# produces no diff and nothing ever gets pushed.
+with open(INDEX_HTML) as f:
+    html = f.read()
+html = re.sub(r'"updated":"\d{4}-\d{2}-\d{2}"', f'"updated":"{now}"', html)
+with open(INDEX_HTML, "w") as f:
+    f.write(html)
+
 # 5. Copy index.html to pages repo
 # (the HTML has embedded data, but the timestamp update above should flow through)
 run(f"cp {INDEX_HTML} {PAGES_HTML}")
 
-# Update the "Updated:" text in the HTML
+# Update the "Updated:" text in the HTML (the date lives in the embedded DATA JSON)
 with open(PAGES_HTML) as f:
     html = f.read()
 
 # Replace the date in the HTML
-import re
-html = re.sub(r'Updated: \d{4}-\d{2}-\d{2}', f'Updated: {now}', html)
+html = re.sub(r'"updated":"\d{4}-\d{2}-\d{2}"', f'"updated":"{now}"', html)
 
 with open(PAGES_HTML, "w") as f:
     f.write(html)
@@ -78,7 +86,7 @@ else:
 # 7. Also commit the timestamp update to the source repo
 ok, out, _ = run("git status --porcelain", REPO)
 if out.strip():
-    run("git add hotlines.json", REPO)
+    run("git add hotlines.json index.html", REPO)
     run(f'git commit -m "Weekly timestamp refresh {now}"', REPO)
     run("git push origin master", REPO)
 
